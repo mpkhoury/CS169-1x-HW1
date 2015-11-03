@@ -8,8 +8,14 @@ class HangpersonGame
   # def initialize()
   # end
   
+  attr_accessor :word
+  attr_accessor :guesses
+  attr_accessor :wrong_guesses
+  
   def initialize(word)
     @word = word
+    @guesses = ''
+    @wrong_guesses = ''
   end
 
   def self.get_random_word
@@ -19,4 +25,25 @@ class HangpersonGame
     Net::HTTP.post_form(uri ,{}).body
   end
 
+  def guess(new_guess)
+    
+    raise ArgumentError if new_guess.nil?
+    raise ArgumentError if new_guess.empty?
+    raise ArgumentError if new_guess =~ /[^a-zA-Z]+/
+    
+    new_guess.downcase!
+    
+    if (!@guesses.include? new_guess) && (!@wrong_guesses.include? new_guess)
+      if @word.include? new_guess
+        @guesses << new_guess
+        return true
+      else
+        @wrong_guesses << new_guess
+        return true
+      end
+    end
+    return false
+    
+  end
+  
 end
