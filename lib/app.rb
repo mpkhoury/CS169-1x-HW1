@@ -34,12 +34,17 @@ class HangpersonApp < Sinatra::Base
   post '/guess' do
     # get the guessed letter from params[:guess] (note: if user left it blank,
     #   params[:guess] will be nil)
-
+    letter = params[:guess].to_s[0]
+    
     # Try guessing the letter.  If it has already been guessed,
     #   display "You have already used that letter."
+    if !letter.nil? && !HangpersonGame.guess(letter)
+      flash[:message] = "You have already used that letter."
+    end
 
     # Either way, the user should then be shown the main game screen ('show' action).
-
+    redirect '/show'
+    
   end
   
   get '/show' do
